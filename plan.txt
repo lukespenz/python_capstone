@@ -1,0 +1,14 @@
+Pitch/Idea: 
+Buy Gourmet Mushrooms from local grower
+
+MVP:
+User can add items to cart
+Delete items from cart
+Update items in cart
+Login users (hashing)
+
+Future Features:
+Owner can add new products w/o hardcoding
+Add payment system
+Add reviews
+Recover cart feature
