@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block title %}Products{% endblock %}
+
+{% block content %}
+<h1 align="center">Products</h1>
+<ul class="list-group list-group-flush" id="products">
+    {% for product in products %}
+    <li class="list-group-item">
+        {{ product.name }}
+        {{ product.category }}
+        {{ product.type }}
+        {{ product.price }}
+        {{ product.quantity }}
+        {{ product.on_display }}
+        {{ product.description }}
+    </li>
+    {% endfor %}
+</ul> {% endblock %}
