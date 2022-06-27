@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, Product
+from .models import User, Product, MyForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
 
 auth = Blueprint('auth', __name__)
 
@@ -38,6 +37,11 @@ def logout():
 @auth.route('/add_products', methods=['GET', 'POST'])
 @login_required
 def add_products():
+    form = MyForm()
+
+    if form.validate_on_submit():
+        print(form.image.data)
+
     if request.method == 'POST':
         name = request.form.get('name')
         category = request.form.get('category')
@@ -45,6 +49,9 @@ def add_products():
         price = request.form.get('price')
         quantity = request.form.get('quantity')
         description = request.form.get('description')
+        image = request.form.get('images')
+        print('look here!')
+        print(image)
 
         if request.form.get('on_display') == 'on':
             on_display = True
@@ -53,13 +60,13 @@ def add_products():
 
         new_product = Product(name=name, category=category, type=type, price=price,
                               quantity=quantity, on_display=on_display, description=description)
+
         db.session.add(new_product)
         db.session.commit()
         flash('Product added!', category='success')
+        return products()
 
-        return render_template('products.html', user=current_user)
-
-    return render_template('add_products.html', user=current_user)
+    return render_template('add_products.html', user=current_user, form=form)
 
 
 @auth.route('/products', methods=['GET', 'POST'])
@@ -70,11 +77,17 @@ def products():
     return render_template('products.html', user=current_user, products=products)
 
 
+@auth.route('/error')
+def error():
+    return render_template('error.html', user=current_user)
+
+
 @auth.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
@@ -90,7 +103,7 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters', category='error')
         else:
-            new_user = User(email=email, first_name=first_name,
+            new_user = User(email=email, first_name=first_name, last_name=last_name,
                             password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
@@ -99,3 +112,9 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template('sign_up.html', user=current_user)
+
+
+@auth.route('/shopping_cart', methods=['GET', 'POST'])
+def shopping_cart():
+    #cart = Cart.query.all()
+    return render_template('shopping_cart.html', user=current_user)

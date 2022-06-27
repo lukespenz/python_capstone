@@ -4,14 +4,22 @@
 <h1 align="center">Products</h1>
 <ul class="list-group list-group-flush" id="products">
     {% for product in products %}
+
     <li class="list-group-item">
+        <button type="submit" class="add">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ product.id }}
         {{ product.name }}
         {{ product.category }}
         {{ product.type }}
         {{ product.price }}
         {{ product.quantity }}
-        {{ product.on_display }}
         {{ product.description }}
+        <button type="button" class="close" onClick="deleteProduct({{ product.id }})">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </li>
+
     {% endfor %}
 </ul> {% endblock %}
