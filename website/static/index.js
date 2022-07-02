@@ -15,3 +15,13 @@ const deleteProduct = (productId) => {
         window.location.href = '/products'
     });
 }
+
+
+const addCart = (productId) => {
+    fetch('/add-cart', {
+        method: 'POST',
+        body: JSON.stringify({ productId: productId }),
+    }).then((_res) => {
+        window.location.href = '/shopping_cart'
+    });
+}

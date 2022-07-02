@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Product, User
+from .models import Note, Product, User, Cart
 from . import db
 import json
+from sqlalchemy import update
+
 
 views = Blueprint('views', __name__)
 
@@ -31,6 +33,31 @@ def add_product():
         print('posted!')
         for product in products:
             print(product.id)
+
+
+@views.route('/add-cart', methods=['GET', 'POST'])
+@login_required
+def add_cart():
+    product = json.loads(request.data)
+    productId = product['productId']
+
+    item = productId
+    user_id = current_user.id
+
+    already_in_cart = db.session.query(Cart).filter(
+        Cart.item == item, Cart.user_id == user_id).first()
+    if already_in_cart == None:
+        quantity = 1
+        cart_item = Cart(item=item, quantity=quantity, user_id=user_id)
+        db.session.add(cart_item)
+
+    else:
+        already_in_cart.quantity += 1
+
+    db.session.commit()
+    flash('Added to cart!', category='success')
+
+    return jsonify({})
 
 
 @views.route('/delete-note', methods=['POST'])

@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User, Product, MyForm
+from .models import User, Product, MyForm, Cart, Image
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+import json
 
 auth = Blueprint('auth', __name__)
 
@@ -22,7 +24,7 @@ def login():
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
-            flash('Email does not exit.', category='error')
+            flash('Email does not exist.', category='error')
 
     return render_template('login.html', user=current_user)
 
@@ -37,44 +39,58 @@ def logout():
 @auth.route('/add_products', methods=['GET', 'POST'])
 @login_required
 def add_products():
-    form = MyForm()
+    user = current_user
+    print(user.admin)
+    if user.admin == True:
+        form = MyForm()
 
-    if form.validate_on_submit():
-        print(form.image.data)
+        if form.validate_on_submit():
+            img_name = request.form.get('img_name')
+            filename = secure_filename(form.image.data.filename)
+            sliced = slice(filename.find('.'), len(filename))
+            file_type = filename[sliced]
+            image = img_name + file_type
 
-    if request.method == 'POST':
-        name = request.form.get('name')
-        category = request.form.get('category')
-        type = request.form.get('type')
-        price = request.form.get('price')
-        quantity = request.form.get('quantity')
-        description = request.form.get('description')
-        image = request.form.get('images')
-        print('look here!')
-        print(image)
+            form.image.data.save('website/static/img/' + image)
 
-        if request.form.get('on_display') == 'on':
-            on_display = True
-        else:
-            on_display = False
+            if request.method == 'POST':
+                name = request.form.get('name')
+                category = request.form.get('category')
+                type = request.form.get('type')
+                price = request.form.get('price')
+                quantity = request.form.get('quantity')
+                description = request.form.get('description')
 
-        new_product = Product(name=name, category=category, type=type, price=price,
-                              quantity=quantity, on_display=on_display, description=description)
+                if request.form.get('on_display') == 'on':
+                    on_display = True
+                else:
+                    on_display = False
 
-        db.session.add(new_product)
-        db.session.commit()
-        flash('Product added!', category='success')
-        return products()
+                new_product = Product(name=name, category=category, type=type, price=price,
+                                      quantity=quantity, on_display=on_display, description=description)
 
-    return render_template('add_products.html', user=current_user, form=form)
+                db.session.add(new_product)
+                db.session.commit()
+
+                product = Product.query.filter_by(name=name).first()
+                product_id = product.id
+                new_image = Image(product_id=product_id, image=image)
+                db.session.add(new_image)
+                db.session.commit()
+                flash('Product added!', category='success')
+                return products()
+
+        return render_template('add_products.html', user=current_user, form=form)
+    else:
+        return render_template('error.html')
 
 
 @auth.route('/products', methods=['GET', 'POST'])
 @login_required
 def products():
     products = Product.query.all()
-    print(products)
-    return render_template('products.html', user=current_user, products=products)
+    images = Image.query.all()
+    return render_template('products.html', user=current_user, products=products, images=images)
 
 
 @auth.route('/error')
@@ -116,5 +132,22 @@ def sign_up():
 
 @auth.route('/shopping_cart', methods=['GET', 'POST'])
 def shopping_cart():
-    #cart = Cart.query.all()
-    return render_template('shopping_cart.html', user=current_user)
+    cart = Cart.query.all()
+    images = Image.query.all()
+    cart_list = []
+    images_list = []
+
+    for item in cart:
+        product = item.item
+        quantity = item.quantity
+        item = [product, quantity]
+        cart_list.append(item)
+
+    for image in images:
+        img = image.image
+        images_list.append(img)
+
+    paired_list = list(zip(cart_list, images_list))
+    print(cart_list, images_list)
+
+    return render_template('shopping_cart.html', user=current_user, cart=cart, images=images, carted=paired_list)

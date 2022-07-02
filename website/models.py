@@ -12,9 +12,9 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    notes = db.relationship('Note')
-    # cart = db.relationship("cart", backref='users', uselist=False)
     admin = db.Column(db.Boolean)
+    notes = db.relationship('Note', backref='user')
+    cart = db.relationship('Cart', backref='user')
 
 
 class Note(db.Model):
@@ -33,12 +33,12 @@ class Product(db.Model):
     quantity = db.Column(db.Integer)
     on_display = db.Column(db.Boolean)
     description = db.Column(db.String(2000))
-    cart = db.relationship('Users_Cart')
+    cart_id = db.relationship('Cart', backref=('product'))
 
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product = db.Column(db.Integer, db.ForeignKey('product.id'))
+    product_id = db.Column(db.Integer)
     image = db.Column(db.String(1000))
     created = db.Column(db.DateTime(timezone=True), default=func.now())
 
@@ -47,8 +47,8 @@ class MyForm(FlaskForm):
     image = FileField('image')
 
 
-class Users_Cart(db.Model):
+class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    item = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
