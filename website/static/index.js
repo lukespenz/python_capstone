@@ -16,9 +16,17 @@ const deleteProduct = (productId) => {
     });
 }
 
-
 const addCart = (productId) => {
     fetch('/add-cart', {
+        method: 'POST',
+        body: JSON.stringify({ productId: productId }),
+    }).then((_res) => {
+        window.location.href = '/shopping_cart'
+    });
+}
+
+const deleteCart = (productId) => {
+    fetch('/delete-cart', {
         method: 'POST',
         body: JSON.stringify({ productId: productId }),
     }).then((_res) => {

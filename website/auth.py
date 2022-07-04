@@ -51,6 +51,15 @@ def add_products():
             file_type = filename[sliced]
             image = img_name + file_type
 
+            # checks database to see if image name taken
+            image_name_taken = Image.query.filter_by(image=image).first()
+
+            if image_name_taken != None:
+                flash(
+                    'Image name already taken. Please choose unique name.', category='error')
+                return render_template('add_products.html', user=current_user, form=form)
+
+            # saves image in static/img folder
             form.image.data.save('website/static/img/' + image)
 
             if request.method == 'POST':
@@ -88,8 +97,8 @@ def add_products():
 @auth.route('/products', methods=['GET', 'POST'])
 @login_required
 def products():
-    products = Product.query.all()
-    images = Image.query.all()
+    products = Product.query.all()[::-1]
+    images = Image.query.all()[::-1]
     return render_template('products.html', user=current_user, products=products, images=images)
 
 
@@ -138,14 +147,17 @@ def shopping_cart():
     images_list = []
 
     for item in cart:
-        product = item.item
-        quantity = item.quantity
-        item = [product, quantity]
-        cart_list.append(item)
+        if current_user.id == item.user_id:
+            id = item.id
+            product = item.item
+            quantity = item.quantity
+            item = [product, quantity, id]
+            cart_list.append(item)
 
-    for image in images:
-        img = image.image
-        images_list.append(img)
+            for image in images:
+                if image.product_id == product:
+                    img = image.image
+                    images_list.append(img)
 
     paired_list = list(zip(cart_list, images_list))
     print(cart_list, images_list)

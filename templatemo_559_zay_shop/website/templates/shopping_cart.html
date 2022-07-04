@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block title %}Shopping Cart{% endblock %}
+{% block content %}
+<h1>
+    This is your cart nerd
+    <br>
+    {% for cart in carted %}
+    Product ID: {{ cart[0][0] }}
+    <br>
+    Quantity: {{ cart[0][1] }}
+    <br>
+    Img: <image src="../static/img/{{ cart[1] }}"></image>
+    <br>
+    {% endfor %}
+
+
+</h1>
+{% endblock %}

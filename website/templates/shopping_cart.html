@@ -2,16 +2,24 @@
 {% block content %}
 <h1>
     This is your cart nerd
+</h1>
+
+{% for cart in carted %}
+
+<li class="list-group-item">
+    <button type="button" class="close" onClick="deleteCart({{ cart[0][2] }})">
+        <span aria-hidden="true">&times;</span>
+    </button>
     <br>
-    {% for cart in carted %}
     Product ID: {{ cart[0][0] }}
     <br>
     Quantity: {{ cart[0][1] }}
     <br>
     Img: <image src="../static/img/{{ cart[1] }}"></image>
     <br>
-    {% endfor %}
+</li>
+
+{% endfor %}
 
 
-</h1>
 {% endblock %}

@@ -3,10 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path, environ
 from flask_login import LoginManager
 # from flask_uploads import configure_uploads, IMAGES, UploadSet
-
+secret_key = 'ThisIsTheOnlyWay123456789!'
+DB_NAME = 'postgresql://lqgcillqgzgbeq:aceb31140dd8d60e636739409de9777fab93d8f6dad355d4ea3b0bf029b0ee81@ec2-3-224-8-189.compute-1.amazonaws.com:5432/dd81aird9bek3k'
 db = SQLAlchemy()
-secret_key = environ['secret_key']
-DB_NAME = environ['DB_NAME']
+# secret_key = environ['secret_key']
+# DB_NAME = environ['DB_NAME']
 
 
 def create_app():

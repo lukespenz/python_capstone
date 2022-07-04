@@ -4,7 +4,7 @@
 <h1 align="center">Add Products</h1>
 <form method="POST" enctype="multipart/form-data">
     Name:
-    <input type="text" name="name" id="name" class="form-control">
+    <input type="text" name="name" id="name" class="form-control" required>
     Category:
     <input type="text" name="category" id="category" class="form-control">
     Type:
@@ -16,9 +16,9 @@
     Display Product:
     <input type="checkbox" name="on_display" id="on_display" class="form-control">
     Description:
-    <textarea name="description" id="description" class="form-control"></textarea>
+    <textarea name="description" id="description" class="form-control" required></textarea>
     Name of Image:
-    <input type="text" name="img_name" id="img_name" class="form-control">
+    <input type="text" name="img_name" id="img_name" class="form-control" required>
     Images:
     {{ form.csrf_token }}
     {{ form.image }}

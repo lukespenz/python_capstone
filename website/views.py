@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Product, User, Cart
+from .models import Note, Product, User, Cart, Image
 from . import db
 import json
 from sqlalchemy import update
+import os
 
 
 views = Blueprint('views', __name__)
@@ -60,6 +61,23 @@ def add_cart():
     return jsonify({})
 
 
+@views.route('/delete-cart', methods=['POST'])
+def delete_cart():
+    cart = json.loads(request.data)
+    print('HIT ME')
+    print(cart)
+    cart_id = cart['productId']
+    print(cart_id)
+
+    product = Cart.query.get(cart_id)
+
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+
+    return jsonify({})
+
+
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
     note = json.loads(request.data)
@@ -78,9 +96,16 @@ def delete_product():
     product = json.loads(request.data)
     productId = product['productId']
     product = Product.query.get(productId)
+    image = Image.query.get(productId)
+    print(image.image)
+    img_file_path = 'website/static/img/' + image.image
+
+    if os.path.exists(img_file_path):
+        os.remove(img_file_path)
 
     if product:
         db.session.delete(product)
+        db.session.delete(image)
         db.session.commit()
 
     return jsonify({})

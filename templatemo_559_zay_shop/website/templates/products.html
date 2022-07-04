@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block title %}Products{% endblock %}
+
+{% block content %}
+<h1 align="center">Products</h1>
+<ul class="list-group list-group-flush" id="products">
+    {% for product in products %}
+    {% for img in images %}
+    {% if product.id == img.product_id %}
+
+
+
+    <li class="list-group-item">
+        <button type="button" class="close" onClick="deleteProduct({{ product.id }})">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <br>
+        <image src="../static/img/{{ img.image }}"></image>
+        <br>
+        ID: {{ product.id }}
+        <br>
+        Name: {{ product.name }}
+        <br>
+        Category: {{ product.category }}
+        <br>
+        Type: {{ product.type }}
+        <br>
+        Price: ${{ product.price }}
+        <br>
+        Quantity: {{ product.quantity }}
+        <br>
+        Description: {{ product.description }}
+        <br>
+        <button type="button" class="btn btn-primary" onClick="addCart({{ product.id }})">Add to Cart</button>
+    </li>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+
+
+</ul>
+{% endblock %}
