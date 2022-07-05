@@ -33,3 +33,22 @@ const deleteCart = (productId) => {
         window.location.href = '/shopping_cart'
     });
 }
+
+const product = (productId) => {
+    fetch('/product_showcase', {
+        method: 'POST',
+        body: JSON.stringify({ productId: productId }),
+        });
+        // .then((_res) => {
+        //     window.location.href = '/product_showcase'
+        // });
+    }
+
+const checkout = (userId) => {
+    fetch('/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ userId: userId }),
+    }).then((_res) => {
+        window.location.href = '/'
+    });
+}

@@ -1,25 +1,73 @@
 {% extends 'base.html' %} {% block title %}Shopping Cart{% endblock %}
 {% block content %}
-<h1>
-    This is your cart nerd
+<br>
+<h1 align="center">
+    Cart
 </h1>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            Product
+        </div>
+        <div class="col-3">
+            Name
+        </div>
+        <div class="col-3">
+            Quantity
+        </div>
+        <div class="col-3">
+            Price
+        </div>
+    </div>
+    <hr>
+</div>
 
 {% for cart in carted %}
 
-<li class="list-group-item">
-    <button type="button" class="close" onClick="deleteCart({{ cart[0][2] }})">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <br>
-    Product ID: {{ cart[0][0] }}
-    <br>
-    Quantity: {{ cart[0][1] }}
-    <br>
-    Img: <image src="../static/img/{{ cart[1] }}"></image>
-    <br>
-</li>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <image class="product row" src="../static/img/products/{{ cart[1] }}"></image>
+        </div>
+        <div class="col-3">
+            <div class="col-md-3">
+                <p id="product_name">{{ cart[0][0] }}</p>
+                <p id="product_category">{{ cart[0][4] }}</p>
+            </div>
+            <button type="button" onClick="deleteCart({{ cart[0][2] }})" id="remove_cart">Remove Product</button>
+        </div>
+        <div class="col-3">
+            <form>
+                <input type="number" id="quantity" name="quantity" min="1" max="99" placeholder={{ cart[0][1] }}>
+            </form>
+        </div>
+        <div class="col-3">
+            <div class="col-md-3">${{ cart[0][3] }}</div>
+        </div>
+    </div>
+</div>
+<hr>
+</div>
 
 {% endfor %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-3">
+        </div>
+        <div class="col-3">
+        </div>
+        <div class="col-3">
+            <p>Subtotal: $ {{ subtotal }}</p>
+            <p id="price_warning">Taxes and shipping calculated at checkout</p>
+            <button type="button" class="btn btn-primary" onClick="checkout({{ user_id }})">Checkout</button>
+            <br>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

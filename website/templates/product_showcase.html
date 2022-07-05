@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block title %}Product Showcase{% endblock %}
+
+{% block content %}
+<br>
+<h1>Something</h1>
+<div class="container" id="products">
+    <div class="row">
+        {% for product in arr %}
+        {% for img in images %}
+        {% if product.id == img.product_id %}
+
+        <div class="col-md-4">
+            {% if current_user.admin == True %}
+            <button type="button" class="close" onClick="deleteProduct({{ product.id }})">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% endif %}
+            <br>
+            <image class="product" src="../static/img/{{ img.image }}" onClick="product({{ product.id }})"></image>
+            <br>
+            ID: {{ product.id }}
+            <br>
+            Name: {{ product.name }}
+            <br>
+            Category: {{ product.category }}
+            <br>
+            Type: {{ product.type }}
+            <br>
+            Price: ${{ product.price }}
+            <br>
+            Quantity: {{ product.quantity }}
+            <br>
+            Description: {{ product.description }}
+            <br>
+            <button type="button" class="btn btn-primary" onClick="addCart({{ product.id }})">Add to Cart</button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </div>
+    {% endblock %}

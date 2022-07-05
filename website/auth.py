@@ -36,6 +36,23 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
+@auth.route('/product_showcase', methods=['POST', 'GET'])
+@login_required
+def product_showcase():
+    arr = []
+
+    if request == 'POST':
+        # if len(arr) == 1:
+        #     arr.pop(0)
+        product = json.loads(request.data)
+        product_id = product['productId']
+        print(product_id)
+        arr.append(product_id)
+
+    print(arr)
+    return render_template("product_showcase.html", user=current_user, arr=arr)
+
+
 @auth.route('/add_products', methods=['GET', 'POST'])
 @login_required
 def add_products():
@@ -60,7 +77,7 @@ def add_products():
                 return render_template('add_products.html', user=current_user, form=form)
 
             # saves image in static/img folder
-            form.image.data.save('website/static/img/' + image)
+            form.image.data.save('website/static/img/products/' + image)
 
             if request.method == 'POST':
                 name = request.form.get('name')
@@ -95,7 +112,6 @@ def add_products():
 
 
 @auth.route('/products', methods=['GET', 'POST'])
-@login_required
 def products():
     products = Product.query.all()[::-1]
     images = Image.query.all()[::-1]
@@ -145,21 +161,47 @@ def shopping_cart():
     images = Image.query.all()
     cart_list = []
     images_list = []
+    subtotal = 0
+    user_id = current_user.id
 
     for item in cart:
         if current_user.id == item.user_id:
+            product_id = item.item
+            product = Product.query.filter_by(id=product_id).first()
+            name = product.name
+            print(product)
+            print(name)
             id = item.id
-            product = item.item
             quantity = item.quantity
-            item = [product, quantity, id]
+            price = product.price
+            subtotal += price
+            category = product.category
+
+            item = [name, quantity, id, price, category]
             cart_list.append(item)
 
             for image in images:
-                if image.product_id == product:
+                if image.product_id == product_id:
                     img = image.image
                     images_list.append(img)
 
     paired_list = list(zip(cart_list, images_list))
     print(cart_list, images_list)
+    print(subtotal)
 
-    return render_template('shopping_cart.html', user=current_user, cart=cart, images=images, carted=paired_list)
+    return render_template('shopping_cart.html', user=current_user, cart=cart, images=images, carted=paired_list, subtotal=subtotal, user_id=user_id)
+
+
+@auth.route('/about_us')
+def about_us():
+    return render_template('about_us.html', user=current_user)
+
+
+@auth.route('/contact')
+def contact():
+    return render_template('contact.html', user=current_user)
+
+
+@auth.route('/FAQs')
+def faqs():
+    return render_template('FAQs.html', user=current_user)

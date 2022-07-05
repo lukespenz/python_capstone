@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Product, User, Cart, Image
+from .models import Product, User, Cart, Image
 from . import db
 import json
 from sqlalchemy import update
@@ -11,19 +11,7 @@ views = Blueprint('views', __name__)
 
 
 @views.route('/', methods=['GET', 'POST'])
-@login_required
 def home():
-    if request.method == 'POST':
-        note = request.form.get('note')
-
-        if len(note) < 1:
-            flash('Note is too short!', category='error')
-        else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-
     return render_template('home.html', user=current_user)
 
 
@@ -37,7 +25,6 @@ def add_product():
 
 
 @views.route('/add-cart', methods=['GET', 'POST'])
-@login_required
 def add_cart():
     product = json.loads(request.data)
     productId = product['productId']
@@ -78,19 +65,6 @@ def delete_cart():
     return jsonify({})
 
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-
-    return jsonify({})
-
-
 @views.route('/delete-product', methods=['POST'])
 def delete_product():
     product = json.loads(request.data)
@@ -98,7 +72,7 @@ def delete_product():
     product = Product.query.get(productId)
     image = Image.query.get(productId)
     print(image.image)
-    img_file_path = 'website/static/img/' + image.image
+    img_file_path = 'website/static/img/products/' + image.image
 
     if os.path.exists(img_file_path):
         os.remove(img_file_path)
@@ -107,5 +81,22 @@ def delete_product():
         db.session.delete(product)
         db.session.delete(image)
         db.session.commit()
+
+    return jsonify({})
+
+
+@views.route('/checkout', methods=['POST'])
+def checkout():
+    user = json.loads(request.data)
+    user_id = user['userId']
+
+    cart = Cart.query.filter_by(user_id=user_id).all()
+
+    for item in cart:
+        remove_cart = Cart.query.get(item.id)
+        db.session.delete(remove_cart)
+        db.session.commit()
+
+    flash('Checked out, your order is on its way!', category='success')
 
     return jsonify({})
