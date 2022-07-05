@@ -59,3 +59,12 @@
     font-size: 8pt;
     color: grey;
 }
+
+#old_spice {
+
+    height: auto;
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
