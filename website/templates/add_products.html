@@ -21,8 +21,10 @@
     Name of Image:
     <input type="text" name="img_name" id="img_name" class="form-control" required>
     Images:
-    {{ form.csrf_token }}
-    {{ form.image }}
+    <div id="image_box">
+        {{ form.csrf_token }}
+        {{ form.image }}
+    </div>
     <br>
     <div align="center">
         <button type="submit" class="btn btn-primary">Add Product</button>

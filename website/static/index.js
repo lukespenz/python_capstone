@@ -1,12 +1,3 @@
-const deleteNote = (noteId) => {
-    fetch('/delete-note', {
-        method: 'POST',
-        body: JSON.stringify({ noteId: noteId }),
-    }).then((_res) => {
-        window.location.href = '/'
-    });
-}
-
 const deleteProduct = (productId) => {
     fetch('/delete-product', {
         method: 'POST',
@@ -15,6 +6,16 @@ const deleteProduct = (productId) => {
         window.location.href = '/products'
     });
 }
+
+// const updateProduct = (productId) => {
+//     fetch('/update_product', {
+//         method: 'POST',
+//         body: JSON.stringify({ productId: productId }),
+//     })
+//     // .then((_res) => {
+//     //     window.location.href = '/update_product'
+//     // });
+// }
 
 const addCart = (productId) => {
     fetch('/add-cart', {

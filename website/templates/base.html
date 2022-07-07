@@ -20,19 +20,20 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">
+            <a class="nav-item nav-link" id="home" float="left" href="/"> <img id="logo_home"
+                    src="../static/img/permanent/Logo-no-white.png"></a>
             <div class="navbar-nav">
-                <a class="nav-item nav-link" id="home" href="/">Home</a>
-                <a class="nav-item nav-link" id="products" href="/products">Products</a>
-                <a class="nav-item nav-link" href="/about_us">About Us</a>
-                <a class="nav-item nav-link" href="/contact">Contact</a>
-                <a class="nav-item nav-link" href="/FAQs">FAQs</a>
+                <a class="nav-item nav-link nav_bar" float="left" id="products" href="/products">Products</a>
+                <a class="nav-item nav-link nav_bar" href="/about_us">About Us</a>
+                <a class="nav-item nav-link nav_bar" href="/contact">Contact</a>
+                <a class="nav-item nav-link nav_bar" href="/FAQs">FAQs</a>
                 {% if current_user.admin == True %}
-                <a class="nav-item nav-link" id="add_products" href="/add_products">Add Products</a>
+                <a class="nav-item nav-link" class="nav_bar" href="/add_products">Add Products</a>
                 {% endif %}
             </div>
-            <a class="nav-item nav-link" id="navbar-right" href="/login"><img id="nav-icon"
+            <a class="nav-item nav-link navbar_right" href="/login"><img id="nav-icon"
                     src="../static/img/permanent/user_icon.png"></a>
-            <a class="navbar-right nav-link" id="navbar-right" href="/shopping_cart"><img id="nav-icon"
+            <a class="navbar-right nav-link navbar_right" href="/shopping_cart"><img id="nav-icon"
                     src="../static/img/permanent/cart_icon.png"></a>
         </div>
     </nav>
@@ -67,9 +68,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>

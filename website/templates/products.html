@@ -2,34 +2,87 @@
 
 {% block content %}
 <br>
-<h1 align="center">Products</h1>
 <div class="container" id="products">
+    <h1 align="center">Products</h1>{% if current_user.admin == True %}<h3 class="on_display">(ON display)</h3>{% endif
+    %}
     <div class="row">
         {% for product in products %}
         {% for img in images %}
         {% if product.id == img.product_id %}
-
+        {% if product.on_display == True %}
         <div class="col-md-4">
             {% if current_user.admin == True %}
+            <a href="/update_product/{{ product.id }}" class="btn btn-outline-secondary btn-sm" align="right">Update</a>
             <button type="button" class="close" onClick="deleteProduct({{ product.id }})">
                 <span aria-hidden="true">&times;</span>
             </button>
             {% endif %}
             <br>
-            <image class="product" src="../static/img/products/{{ img.image }}" onClick="product({{ product.id }})">
-            </image>
+            <a href="/product_showcase/{{ product.id }}">
+                <image class="product" src="../static/img/products/{{ img.image }}">
+                </image>
+            </a>
             <br>
             <h2>{{ product.name }}</h2>
             <h3>${{ product.price }}</32>
                 <br>
                 <button type="button" class="btn btn-primary" onClick="addCart({{ product.id }})">Add to Cart</button>
         </div>
+
+
+
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+
+        {% if current_user.admin == True %}
+
+        <h3 class="on_display col-md-12">(OFF display)</h3>{% endif %}
+        {% for product in products %}
+        {% for img in images %}
+        {% if product.id == img.product_id %}
+        {% if product.on_display == False %}
+        {% if current_user.admin == True %}
+        <div class="col-md-4">
+            {% if current_user.admin == True %}
+            <a href="/update_product/{{ product.id }}" class="btn btn-outline-secondary btn-sm" align="right">Update</a>
+            <button type="button" class="close" onClick="deleteProduct({{ product.id }})">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% endif %}
+            <br>
+            <a href="/product_showcase/{{ product.id }}">
+                <image class="product" src="../static/img/products/{{ img.image }}">
+                </image>
+            </a>
+            <br>
+            <h2>{{ product.name }}</h2>
+            <h3>${{ product.price }}</32>
+        </div>
+        {% endif %}
+        {% endif %}
         {% endif %}
         {% endfor %}
         {% endfor %}
     </div>
-
-
 </div>
-
 {% endblock %}

@@ -7,44 +7,64 @@
 <div class="container">
     <div class="row">
         <div class="col-3">
-            Location:
-            Fake Street 123, UT, USA, 65432
+            <h3>Location:</h3>
+            <br>
+            <p>Fake Street 123, UT, USA, 65432</p>
         </div>
         <div class="col-3">
-            Hours:
-            Monday - Friday 10am-10pm
-            Saturday - Sunday 12am-12pm
+            <h3>Hours:</h3>
+            <br>
+            <p>Monday - Friday 10am-10pm
+                <br>
+                Saturday - Sunday 12am-12pm
+            </p>
         </div>
         <div class="col-3">
-            Phone:
-            987-654-3210
+            <h3>Phone:</h3>
+            <br>
+            <p>987-654-3210</p>
         </div>
         <div class="col-3">
-            Email:
-            fake@hotmail.com
+            <h3>Email:</h3>
+            <br>
+            <p>fake@hotmail.com</p>
         </div>
     </div>
     <hr>
 </div>
 
-<div align="center" class="container">
-    <div class="row">
-        <div class="col-12">
-            <form action="action_page.php">
-
-                <label for="fname">First Name</label>
-                <input type="text" id="fname" name="firstname" placeholder="Your name..">
-                <br>
-                <label for="lname">Last Name</label>
-                <input type="text" id="lname" name="lastname" placeholder="Your last name..">
-                <br>
-                <label for="subject">Subject</label>
-                <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-                <br>
-                <input type="submit" value="Submit">
-
-            </form>
+<form method="POST" action="/contact">
+    <div class="container">
+        <div class="row input-container">
+            <div class="col-xs-12">
+                <div class="styled-input wide">
+                    <input id="input_textarea" type="text" required />
+                    <label>Name</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="styled-input">
+                    <input id="input_textarea" type="text" required />
+                    <label>Email</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="styled-input" style="float:right;">
+                    <input id="input_textarea" type="text" required />
+                    <label>Phone Number</label>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="styled-input wide">
+                    <textarea id="input_textarea" required></textarea>
+                    <label>Message</label>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <button type="submit" class="btn-lrg submit-btn">Send Message</button>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
 {% endblock %}

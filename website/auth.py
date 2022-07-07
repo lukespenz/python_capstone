@@ -5,6 +5,7 @@ from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 import json
+import os
 
 auth = Blueprint('auth', __name__)
 
@@ -36,21 +37,15 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-@auth.route('/product_showcase', methods=['POST', 'GET'])
+@auth.route('/product_showcase/<int:id>', methods=['POST', 'GET'])
 @login_required
-def product_showcase():
-    arr = []
+def product_showcase(id):
+    product_id = id
+    print(product_id)
+    product = Product.query.get(product_id)
+    image = Image.query.get(product_id)
 
-    if request == 'POST':
-        # if len(arr) == 1:
-        #     arr.pop(0)
-        product = json.loads(request.data)
-        product_id = product['productId']
-        print(product_id)
-        arr.append(product_id)
-
-    print(arr)
-    return render_template("product_showcase.html", user=current_user, arr=arr)
+    return render_template("product_showcase.html", user=current_user, product=product, image=image)
 
 
 @auth.route('/add_products', methods=['GET', 'POST'])
@@ -162,7 +157,8 @@ def shopping_cart():
     cart_list = []
     images_list = []
     subtotal = 0
-    user_id = current_user.id
+    user = current_user
+    user_id = user.id
 
     for item in cart:
         if current_user.id == item.user_id:
@@ -197,11 +193,83 @@ def about_us():
     return render_template('about_us.html', user=current_user)
 
 
-@auth.route('/contact')
+@auth.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        flash('Contact form successfully submitted', category="success")
+
     return render_template('contact.html', user=current_user)
 
 
 @auth.route('/FAQs')
 def faqs():
     return render_template('FAQs.html', user=current_user)
+
+
+@auth.route('/update_product/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_product(id):
+    product_id = id
+    product = Product.query.get(product_id)
+    img_name = request.form.get('img_name')
+
+    form = MyForm()
+
+    if form.validate_on_submit():
+        filename = secure_filename(form.image.data.filename)
+        sliced = slice(filename.find('.'), len(filename))
+        file_type = filename[sliced]
+        image = img_name + file_type
+        img_file_path = 'website/static/img/products/'
+        print('here')
+        print(len(image))
+
+        # checks database to see if image name taken
+        image_name_taken = Image.query.filter_by(image=image).first()
+
+        if image_name_taken != None:
+            flash('Image name already taken. Please choose unique name.',
+                  category='error')
+            return render_template('update_product.html', user=current_user, form=form, product=product)
+
+        # saves image in static/img folder
+        if image != '':
+            update_image = Image.query.get(product_id)
+
+            if os.path.exists(img_file_path + image):
+                os.remove(img_file_path + image)
+
+            if os.path.exists(img_file_path + update_image.image):
+                os.remove(img_file_path + update_image.image)
+
+            form.image.data.save('website/static/img/products/' + image)
+            update_image = Image.query.get(product_id)
+            update_image.image = image
+
+        if request.method == 'POST':
+            product.name = request.form['name']
+            product.category = request.form['category']
+            product.type = request.form['type']
+            product.price = request.form['price']
+            product.quantity = request.form['quantity']
+            product.description = request.form['description']
+
+            if request.form.get('on_display') == 'on':
+                product.on_display = True
+            else:
+                product.on_display = False
+
+            try:
+                # db.session.add(product)
+                db.session.commit()
+
+                flash(
+                    f'Product { product.name } successfully updated!', category='success')
+                return redirect('/products')
+            except:
+                return flash('Error: problem updating product')
+
+        # else:
+        #     return render_template('update_product.html', product=product)
+
+    return render_template('update_product.html', user=current_user, form=form, product=product)

@@ -85,6 +85,26 @@ def delete_product():
     return jsonify({})
 
 
+# @views.route('/edit-product', methods=['POST'])
+# def edit_product():
+#     product = json.loads(request.data)
+#     productId = product['productId']
+#     product = Product.query.get(productId)
+#     image = Image.query.get(productId)
+#     print(image.image)
+#     img_file_path = 'website/static/img/products/' + image.image
+
+#     if os.path.exists(img_file_path):
+#         os.remove(img_file_path)
+
+#     if product:
+#         db.session.delete(product)
+#         db.session.delete(image)
+#         db.session.commit()
+
+#     return jsonify({})
+
+
 @views.route('/checkout', methods=['POST'])
 def checkout():
     user = json.loads(request.data)
