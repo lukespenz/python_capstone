@@ -75,8 +75,8 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    height: 80%;
-    width: 120%;
+    height: 400px;
+    width: auto;
 }
 
 #error {

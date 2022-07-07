@@ -2,28 +2,44 @@
 
 {% block content %}
 <br>
-<h1>Something</h1>
+<h1>{{ product.name }}</h1>
 <div class="container" id="products">
     <div class="row">
         <div class="col-md-4">
             <br>
             <image class="product_showcase" src="../static/img/products/{{ image.image }}"></image>
-            <br>
-            ID: {{ product.id }}
-            <br>
-            Name: {{ product.name }}
-            <br>
-            Category: {{ product.category }}
-            <br>
-            Type: {{ product.type }}
-            <br>
-            Price: ${{ product.price }}
-            <br>
-            Quantity: {{ product.quantity }}
-            <br>
-            Description: {{ product.description }}
-            <br>
-            <button type="button" class="btn btn-primary" onClick="addCart({{ product.id }})">Add to Cart</button>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    <br>
+                <h2>${{ product.price }}</h2>
+                <br>
+                <h3>Quantity:</h3>
+                <form>
+                    <input type="number" id="quantity" name="quantity" min="1" max="99" value=1>
+                </form>
+                {% if product.type != '' %}
+                <br>
+                <h3>Type:</h3>
+                <br>
+                {{ product.type }}
+                {% endif %}
+                <br>
+                <br>
+                <h3>Description:</h3>
+                <br>
+                {{ product.description }}
+                <br>
+                <br>
+                </p>
+                <button type="button" class="btn btn-primary btn-lg btn-block" onClick="addCart({{ product.id }})">Add
+                    to
+                    Cart</button>
+            </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
